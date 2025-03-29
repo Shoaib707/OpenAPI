@@ -63,3 +63,48 @@ paths:
           description: Payment required or failed
         '500':
           description: Internal server error
+
+  /movies:
+    get:
+      summary: Retrieve available movies and showtimes
+      responses:
+        '200':
+          description: List of available movies
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    movie_id:
+                      type: string
+                      example: "mv_001"
+                    title:
+                      type: string
+                      example: "Dune: Part Two"
+                    showtimes:
+                      type: array
+                      items:
+                        type: string
+                      example: ["3:00 PM", "6:30 PM", "9:45 PM"]
+        '404':
+          description: No movies found
+
+  /reservation/{id}:
+    delete:
+      summary: Cancel a movie ticket reservation
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "res_456abc"
+      responses:
+        '200':
+          description: Reservation successfully canceled
+        '404':
+          description: Reservation not found
+        '400':
+          description: Invalid reservation ID
