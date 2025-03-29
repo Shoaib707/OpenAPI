@@ -1,0 +1,65 @@
+openapi: 3.0.0
+info:
+  title: Movie Ticket Payment API
+  version: 1.0.0
+  description: |
+    This API endpoint verifies and processes the payment for a movie ticket reservation. 
+    It accepts payment method details and a reservation ID, then returns the payment status 
+    and issued ticket IDs/confirmation upon success.
+
+paths:
+  /payment:
+    post:
+      summary: Process payment for a movie ticket reservation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - reservation_id
+                - payment_method
+                - card_info
+              properties:
+                reservation_id:
+                  type: string
+                  example: "res_456abc"
+                payment_method:
+                  type: string
+                  enum: [credit_card, debit_card, paypal]
+                  example: "credit_card"
+                card_info:
+                  type: object
+                  properties:
+                    card_number:
+                      type: string
+                      example: "1111111111111111"
+                    expiration_date:
+                      type: string
+                      example: "12/26"
+                    cvv:
+                      type: string
+                      example: "123"
+      responses:
+        '200':
+          description: Payment processed successfully! 
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  payment_status:
+                    type: string
+                    example: "success"
+                  ticket_ids:
+                    type: array
+                    items:
+                      type: string
+                    example: ["tkt_123", "tkt_124"]
+        '400':
+          description: Invalid payment request
+        '402':
+          description: Payment required or failed
+        '500':
+          description: Internal server error
